@@ -1,10 +1,18 @@
-import express from 'express';
-import mongoose from 'mongoose';
+
+import express from "express";
+import mongoose from "mongoose";
+import bodyParser from "body-parser";
+import { Book } from "./models/Book.js";
+import commentRoute from "./route/comment.js";
+import genreRoute from "./route/genre.js";
+import ratingRoute from "./route/rating.js";
+
 import bodyParser from 'body-parser';
 import { BookRoute, AccountRoute } from './routes/index.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
+
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -23,9 +31,16 @@ mongoose.connect(URI)
         console.log('err',err)
     })
 
-app.listen(PORT, () => {
-            console.log(`Server is running on port ${PORT} `)
-        })
 
+app.use("/api/comment", commentRoute);
+app.use("/api/genre", genreRoute);
+app.use("/api/rating", ratingRoute);
 app.use('/api/books',BookRoute);
 app.use('/api/account',AccountRoute);
+
+app.listen(PORT, () => {
+  console.log(`Server đang chạy trên cổng ${PORT}`);
+});
+
+
+
