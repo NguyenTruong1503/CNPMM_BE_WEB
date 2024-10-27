@@ -2,12 +2,12 @@ import mongoose from 'mongoose';
 
 const commentSchema = new mongoose.Schema({
     chapterId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Number,
         ref: 'Chapter',
         required: true,
     },
     accountId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Number,
         ref: 'Account',
         required: true,
     },

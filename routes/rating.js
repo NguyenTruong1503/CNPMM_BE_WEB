@@ -5,7 +5,7 @@ import {
   getRatingsByBookId,
   updateRating,
   deleteRating,
-} from "../controller/Rating.js";
+} from "../controllers/Rating.js";
 
 const router = express.Router();
 

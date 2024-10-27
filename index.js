@@ -2,13 +2,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import { Book } from "./models/Book.js";
-import commentRoute from "./route/comment.js";
-import genreRoute from "./route/genre.js";
-import ratingRoute from "./route/rating.js";
-
-import bodyParser from 'body-parser';
-import { BookRoute, AccountRoute } from './routes/index.js';
+import { BookRoute, AccountRoute,commentRoute, genreRoute, ratingRoute } from './routes/index.js';
 import dotenv from 'dotenv';
 
 dotenv.config();

@@ -10,8 +10,8 @@ export const addComment = async (req, res) => {
   }
   try {
     const newComment = new Comment({
-      chapterId: new mongoose.Types.ObjectId(chapterId),
-      accountId: new mongoose.Types.ObjectId(accountId),
+      chapterId: chapterId,
+      accountId: accountId,
       content,
     });
     await newComment.save();

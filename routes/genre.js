@@ -5,7 +5,7 @@ import {
   getAllGenres,
   updateGenre,
   deleteGenre,
-} from "../controller/Genre.js";
+} from "../controllers/Genre.js";
 
 const router = express.Router();
 
