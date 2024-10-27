@@ -1,0 +1,84 @@
+
+import { BookService } from "../services/BookService.js";
+import { ResponseData, ResponseDetail } from "../services/ResponseJSON.js";
+
+export const BookController = {
+    CreateBook: async (req, res) => {
+        const bookData = {
+            name: req.body.name,
+            description: req.body.description,
+            author: req.body.author,
+            genre: req.body.genre,
+            price: req.body.price,
+            thumbnail: req.body.thumbnail
+        };
+
+        const result = await BookService.createBook(bookData);
+        
+        if (result.success) {
+            return res.status(200).json(ResponseData(200, result.data));
+        } else {
+            const statusCode = result.message === "Lỗi đăng truyện" ? 500 : 400;
+            return res.status(statusCode).json(ResponseDetail(statusCode, { message: result.message }));
+        }
+    },
+    GetAllBooks: async (req, res) => {
+        const result = await BookService.getAllBooks();
+        if (result.success) {
+            return res.status(200).json(ResponseData(200, result.data));
+        }else {
+            return res.status(500).json(ResponseDetail(500, { message: result.message }));
+        }
+    },
+    Search: async (req, res) => {
+        let keyword = req.query.keyword;
+        keyword = keyword
+            .normalize("NFD")
+            .toLowerCase()
+            .replace(/[\u0300-\u036f]/g, "")
+            .split(' ')
+            .filter(i => i !== '')
+            .join(' ');
+
+        const result = await BookService.search(keyword);
+        if (result.success) {
+            return res.status(200).json(ResponseData(200, result.data));
+        }else {
+            return res.status(500).json(ResponseDetail(500, { message: result.message }));
+        }
+    },
+    GetBookById : async (req, res) => {
+        const bookId = req.params.bookId;
+        const result = await BookService.getBookById(bookId);
+        if (result.success) {
+            return res.status(200).json(ResponseData(200, result.data));
+        }else {
+            return res.status(500).json(ResponseDetail(500, { message: result.message }));
+        }
+    },
+    DeleteBook: async (req, res) => {
+        const bookId = req.params.bookId;
+        const result = await BookService.deleteBook(bookId);
+        if (result.success) {
+            return res.status(200).json(ResponseData(200, result.data));
+        }else {
+            return res.status(500).json(ResponseDetail(500, { message: result.message }));
+        }
+    },
+    UpdateBook: async (req, res) => {
+        const bookId = req.params.bookId;
+        const bookData = {
+            name: req.body.name,
+            description: req.body.description,
+            author: req.body.author,
+            genre: req.body.genre,
+            price: req.body.price,
+            thumbnail: req.body.thumbnail
+        };
+        const result = await BookService.updateBook(bookId, bookData);
+        if (result.success) {
+            return res.status(200).json(ResponseData(200, result.data));
+        }
+        return res.status(500).json(ResponseDetail(500, { message: result.message }));
+    }
+};
