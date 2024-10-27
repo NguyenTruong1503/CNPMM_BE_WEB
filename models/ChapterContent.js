@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const contentChapterSchema = new mongoose.Schema({
     chapterId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Number,
         ref: 'Chapter',
         required: true,
     },

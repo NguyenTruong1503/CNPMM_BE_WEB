@@ -13,8 +13,8 @@ export const addRating = async (req, res) => {
 
   try {
     const newRating = new Rating({
-      bookId: new mongoose.Types.ObjectId(bookId),
-      accountId: new mongoose.Types.ObjectId(accountId),
+      bookId: bookId,
+      accountId: accountId,
       star,
     });
     await newRating.save();
