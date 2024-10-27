@@ -2,8 +2,13 @@ import mongoose from 'mongoose';
 
 
 const chapterSchema = new mongoose.Schema({
-    book: {
-        type: mongoose.Schema.Types.ObjectId,
+    chapterId: {
+        type: Number,
+        required: true,
+        unique: true,
+    },
+    bookId: {
+        type: Number,
         ref: 'Book', // Liên kết đến sách
         required: true,
     },
@@ -19,11 +24,7 @@ const chapterSchema = new mongoose.Schema({
     chapter_view: {
         type: Number, // Số lượt xem chương
         default: 0,
-    },
-    chapterContents: [{
-        type: mongoose.Schema.Types.ObjectId, // Liên kết đến nội dung của chương
-        ref: 'ChapterContent',
-    }],
+    }
 },
 { timestamps: true });
 
