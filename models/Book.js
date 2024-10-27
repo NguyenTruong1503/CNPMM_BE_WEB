@@ -1,7 +1,13 @@
 import mongoose from 'mongoose';
-import { Chapter } from './Chapter.js';
+import pkg from 'mongoose-sequence';  // Import AutoIncrement
+const AutoIncrement = pkg(mongoose);
+
 
 const bookSchema = new mongoose.Schema({
+    bookId: {
+        type: Number,
+        unique: true,
+    },
     name: {
         type: String,
         required: true,
@@ -15,12 +21,8 @@ const bookSchema = new mongoose.Schema({
         required: true,
     },
     genre: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Number,
         ref: 'Genre', // liên kết tới thể loại (Genre)
-        required: true,
-    },
-    type: {
-        type: Boolean, // Dạng sách (ví dụ: truyện đọc online hay sách vật lý)
         required: true,
     },
     price: {
@@ -35,14 +37,11 @@ const bookSchema = new mongoose.Schema({
     is_delete: {
         type: Boolean, // Trạng thái bị xóa
         default: false,
-    },
-    chapters: [{
-        type: mongoose.Schema.Types.ObjectId, // Liên kết đến các chương
-        ref: 'Chapter'
-    }],
+    }
 },
 { timestamps: true });
 
+bookSchema.plugin(AutoIncrement, { inc_field: 'bookId', start_seq: 1 });
 bookSchema.index({ name: 'text' }); // Tạo chỉ mục tìm kiếm toàn văn cho tên sách
 
 export const Book = mongoose.model('Book', bookSchema);
