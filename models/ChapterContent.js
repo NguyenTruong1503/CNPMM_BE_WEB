@@ -1,8 +1,12 @@
 import mongoose from 'mongoose';
 
 const contentChapterSchema = new mongoose.Schema({
-    chapterId: {
-        type: mongoose.Schema.Types.ObjectId,
+    contentID: {
+        type: Number,
+        required: true,
+    },
+    chapterID: {
+        type: Number,
         ref: 'Chapter',
         required: true,
     },
@@ -12,4 +16,4 @@ const contentChapterSchema = new mongoose.Schema({
     },
 }, { timestamps: true });
 
-export const ContentChapter = mongoose.model('ContentChapter', contentChapterSchema);
+export const ChapterContent = mongoose.model('ChapterContent', contentChapterSchema);

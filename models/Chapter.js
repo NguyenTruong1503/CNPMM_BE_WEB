@@ -2,9 +2,13 @@ import mongoose from 'mongoose';
 
 
 const chapterSchema = new mongoose.Schema({
-    book: {
-        type: mongoose.Schema.Types.ObjectId,
+    bookID: {
+        type: Number,
         ref: 'Book', // Liên kết đến sách
+        required: true,
+    },
+    chapter_number: {
+        type: Number,
         required: true,
     },
     chapter_title: {
@@ -19,11 +23,7 @@ const chapterSchema = new mongoose.Schema({
     chapter_view: {
         type: Number, // Số lượt xem chương
         default: 0,
-    },
-    chapterContents: [{
-        type: mongoose.Schema.Types.ObjectId, // Liên kết đến nội dung của chương
-        ref: 'ChapterContent',
-    }],
+    }
 },
 { timestamps: true });
 
