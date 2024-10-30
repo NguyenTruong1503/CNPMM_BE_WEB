@@ -1,1 +1,1 @@
-ChapterContentRoute
+/api/chapter
