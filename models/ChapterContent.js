@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const contentChapterSchema = new mongoose.Schema({
-    contentID: {
+    content_number: {
         type: Number,
         required: true,
     },

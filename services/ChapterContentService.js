@@ -14,7 +14,7 @@ export const ChapterContentService = {
     },
     UpdateChapterContent: async (chapterContent) => {
         try {
-            return await ChapterContent.findOneAndUpdate({ chapterID: chapterContent.chapterID, contentID: chapterContent.contentID },
+            return await ChapterContent.findOneAndUpdate({ chapterID: chapterContent.chapterID, content_number: chapterContent.content_number},
                 { content: chapterContent.content },
                 { new: true })
         }
@@ -25,7 +25,7 @@ export const ChapterContentService = {
     },
     DeleteChapterContent: async (chapterContent) => {
         try {
-            return await ChapterContent.findOneAndDelete({chapterID:chapterContent.chapterID, contentID: chapterContent.contentID})
+            return await ChapterContent.findOneAndDelete({chapterID:chapterContent.chapterID, content_number: chapterContent.content_number})
         }
         catch (error) {
             console.log(error)
@@ -34,7 +34,7 @@ export const ChapterContentService = {
     },
     getAllContentByChapterNumber: async (chapterID) => {
         try {
-            return await ChapterContent.find({ chapterID:chapterID}).sort({contentID:1})   
+            return await ChapterContent.find({ chapterID:chapterID}).sort({content_number:1})   
         } catch (error) {
             console.log(error)
             return res.status(500).json(ResponseDetail(500, { message: "Lỗi tải chương truyện" }))

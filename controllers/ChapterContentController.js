@@ -6,10 +6,10 @@ import {ChapterContent} from "../models/ChapterContent.js"
 export const ChapterContentController = {
     CreateChapterContent: async (req, res) => {
         try {
-            const contentID = req.body.contentID
+            const content_number = req.body.content_number
             const chapterID = req.body.chapterID
             const content = req.body.content
-            const chapterContent = await new ChapterContent({contentID,chapterID,content})
+            const chapterContent = await new ChapterContent({content_number,chapterID,content})
             const response = await ChapterContentService.CreateChapterContent(chapterContent)
             return res.status(200).json(ResponseData(200, response))
         }
@@ -20,10 +20,10 @@ export const ChapterContentController = {
     },
     UpdateChapterContent: async (req, res) => {
         try {
-            const contentID = req.body.contentID
+            const content_number = req.body.content_number
             const chapterID = req.body.chapterID
             const content = req.body.content
-            const chapterContent = await new ChapterContent({contentID,chapterID,content})
+            const chapterContent = await new ChapterContent({content_number,chapterID,content})
             const response = await ChapterContentService.UpdateChapterContent(chapterContent)
             if (response) return res.status(200).json(ResponseData(200, response))
             return res.status(400).json(ResponseDetail(400, { message: "Cập nhật chương không thành công" }))
@@ -35,10 +35,10 @@ export const ChapterContentController = {
     },
     DeleteChapterContent: async (req, res) => {
         try {
-            const contentID = req.body.contentID
+            const content_number = req.body.content_number
             const chapterID = req.body.chapterID
             const content = req.body.content
-            const chapterContent = await new ChapterContent({contentID,chapterID,content})
+            const chapterContent = await new ChapterContent({content_number,chapterID,content})
             const response = await ChapterContentService.DeleteChapterContent(chapterContent)
             if (response) return res.status(200).json(ResponseData(200, response))
             return res.status(400).json(ResponseDetail(400, { message: "Không tìm thấy chương" }))
