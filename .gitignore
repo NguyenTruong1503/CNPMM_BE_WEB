@@ -1,0 +1,25 @@
+
+# Bỏ qua thư mục node_modules
+node_modules/
+
+# Bỏ qua build output
+/build/
+
+# Bỏ qua các file log
+*.log
+
+# Bỏ qua các file môi trường
+.env
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+

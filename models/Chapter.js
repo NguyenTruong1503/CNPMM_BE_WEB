@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 
 const chapterSchema = new mongoose.Schema({
-    bookID: {
+    bookId: {
         type: Number,
         ref: 'Book', // Liên kết đến sách
         required: true,
