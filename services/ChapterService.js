@@ -35,48 +35,10 @@ export const ChapterService = {
     },
     getChapterByNumber: async (chapter) => {
         try {
-            return await Chapter.findOne({ bookID: 2, chapter_number: 1})   
-        } catch (error) {
-            console.log(error)
-            return res.status(500).json(ResponseDetail(500, { message: "Lỗi tải chương truyện" }))
-        }
-    },
-    CreateChapterContent: async (chapterContent) => {
-        try {
-            return await chapterContent.save()
-        }
-        catch (error) {
-            console.log(error)
-            throw error
-        }
-    },
-    UpdateChapterContent: async (chapterContent) => {
-        try {
-            return await ChapterContent.findOneAndUpdate({ chapterID: chapterContent.chapterID, contentID: chapterContent.contentID },
-                { content: chapterContent.content },
-                { new: true })
-        }
-        catch (error) {
-            console.log(error)
-            throw error
-        }
-    },
-    DeleteChapterContent: async (chapterContent) => {
-        try {
-            return await ChapterContent.findOneAndDelete({chapterID:chapterContent.chapterID, contentID: chapterContent.contentID})
-        }
-        catch (error) {
-            console.log(error)
-            throw error
-        }
-    },
-    getAllContentByChapter: async (chapterID) => {
-        try {
-            return await ChapterContent.find({ chapterID: chapterID}).sort({contentID:1})   
+            return await Chapter.findOne({ bookID: chapter.bookID, chapter_number: chapter.chapter_number})   
         } catch (error) {
             console.log(error)
             return res.status(500).json(ResponseDetail(500, { message: "Lỗi tải chương truyện" }))
         }
     }
-
 }

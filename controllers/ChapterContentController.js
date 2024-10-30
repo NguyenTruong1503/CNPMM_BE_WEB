@@ -48,10 +48,10 @@ export const ChapterContentController = {
             return res.status(500).json(ResponseDetail(500, { message: "Lỗi xóa chương truyện" }))
         }
     },
-    getAllContentByChapter: async (req, res) => {
+    getAllContentByChapterNumber: async (req, res) => {
         try {
             const chapterID = req.params.chapterID
-            const response = await ChapterContentService.getAllContentByChapter(chapterID)
+            const response = await ChapterContentService.getAllContentByChapterNumber(chapterID)
             if (response) return res.status(200).json(ResponseData(200, response))
             return res.status(400).json(ResponseDetail(400, { message: "Không tìm thấy chương" }))
         } catch (error) {

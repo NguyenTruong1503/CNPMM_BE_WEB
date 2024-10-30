@@ -9,7 +9,7 @@ router.post('/update',ChapterContentController.UpdateChapterContent);
 
 router.post('/delete', ChapterContentController.DeleteChapterContent);
 
-router.get('/:chapterID', ChapterContentController.getAllContentByChapter);
+router.get('/:chapterID',ChapterContentController.getAllContentByChapterNumber);
 
 
 export default router;

@@ -1,1 +1,1 @@
-app.use('/api/chapter',ChapterRoute)
+ChapterContentRoute
