@@ -2,14 +2,13 @@ import mongoose from 'mongoose';
 
 
 const chapterSchema = new mongoose.Schema({
-    chapterId: {
-        type: Number,
-        required: true,
-        unique: true,
-    },
     bookId: {
         type: Number,
         ref: 'Book', // Liên kết đến sách
+        required: true,
+    },
+    chapter_number: {
+        type: Number,
         required: true,
     },
     chapter_title: {
