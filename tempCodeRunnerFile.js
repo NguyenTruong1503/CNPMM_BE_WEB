@@ -1,1 +1,1 @@
-/api/chapter
+/api/books

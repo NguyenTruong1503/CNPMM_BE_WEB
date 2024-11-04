@@ -33,12 +33,19 @@ export const ChapterService = {
             throw error
         }
     },
-    getChapterByNumber: async (chapter) => {
+    getChapterByBookAndNumber: async (chapter) => {
         try {
             return await Chapter.findOne({ bookID: chapter.bookID, chapter_number: chapter.chapter_number})   
         } catch (error) {
-            console.log(error)
-            return res.status(500).json(ResponseDetail(500, { message: "Lỗi tải chương truyện" }))
+           throw error
+        }
+    },
+
+    getListChapterByBook: async (bookID) => {
+        try {
+            return await Chapter.find({ bookID:bookID}).sort({chapter_number:1})   
+        } catch (error) {
+            throw error
         }
     }
 }
