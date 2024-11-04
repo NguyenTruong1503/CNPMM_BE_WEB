@@ -32,9 +32,9 @@ export const ChapterContentService = {
             throw error
         }
     },
-    getAllContentByChapterNumber: async (chapterID) => {
+    getAllContentByChapterID: async (chapterID) => {
         try {
-            return await ChapterContent.find({ chapterID:chapterID}).sort({content_number:1})   
+            return await ChapterContent.find({chapterID:chapterID}).sort({content_number:1})   
         } catch (error) {
             console.log(error)
             return res.status(500).json(ResponseDetail(500, { message: "Lỗi tải chương truyện" }))
