@@ -52,12 +52,12 @@ export const ChapterController = {
             return res.status(500).json(ResponseDetail(500, { message: "Lỗi xóa chương truyện" }))
         }
     },
-    getChapterByNumber: async (req, res) => {
+    getChapterByBookAndNumber: async (req, res) => {
         try {
             const bookID = req.params.bookID
             const chapter_number = req.params.chapter_number
             const chapter = new Chapter({ bookID, chapter_number })
-            const response = await ChapterService.getChapterByNumber(chapter)
+            const response = await ChapterService.getChapterByBookAndNumber(chapter)
             if (response) return res.status(200).json(ResponseData(200, response))
             return res.status(400).json(ResponseDetail(400, { message: "Không tìm thấy chương" }))
         } catch (error) {
@@ -66,4 +66,15 @@ export const ChapterController = {
         }
     },
 
+    getListChapterByBook: async (req, res) => {
+        try {
+            const bookID = req.params.bookID
+            const response = await ChapterService.getListChapterByBook(bookID)
+            if (response) return res.status(200).json(ResponseData(200, response))
+            return res.status(400).json(ResponseDetail(400, { message: "Không tìm thấy chương" }))
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json(ResponseDetail(500, { message: "Lỗi tải chương truyện" }))
+        }
+    },
 }

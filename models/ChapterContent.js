@@ -6,7 +6,7 @@ const contentChapterSchema = new mongoose.Schema({
         required: true,
     },
     chapterID: {
-        type: Number,
+        type: String,
         ref: 'Chapter',
         required: true,
     },
