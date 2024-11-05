@@ -2,7 +2,13 @@
 import express from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
+<<<<<<< Updated upstream
 import { BookRoute, AccountRoute,commentRoute, genreRoute, ratingRoute, ChapterRoute, ChapterContentRoute} from './routes/index.js';
+=======
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import { BookRoute, AuthRoute,commentRoute, genreRoute, ratingRoute , UserRoute} from './routes/index.js';
+>>>>>>> Stashed changes
 import dotenv from 'dotenv';
 import cors from 'cors';
 
@@ -10,6 +16,8 @@ import cors from 'cors';
 dotenv.config();
 
 const app = express();
+app.use(cors());
+app.use(cookieParser());
 
 const PORT = process.env.PORT || 3000;
 const URI = process.env.MONGO_URI;
@@ -37,9 +45,14 @@ app.use("/api/comment", commentRoute);
 app.use("/api/genre", genreRoute);
 app.use("/api/rating", ratingRoute);
 app.use('/api/books',BookRoute);
+<<<<<<< Updated upstream
 app.use('/api/account', AccountRoute);
 app.use('/api/chapter', ChapterRoute)
 app.use('/api/chaptercontent', ChapterContentRoute)
+=======
+app.use('/api/auth',AuthRoute);
+app.use('/api/user',UserRoute);
+>>>>>>> Stashed changes
 
 app.listen(PORT, () => {
   console.log(`Server đang chạy trên cổng ${PORT}`);
