@@ -7,10 +7,21 @@ const accountSchema = new mongoose.Schema({
         type: Number,
         unique: true,
     },
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+        validate:{
+            validator:item=>{
+                return item.length >= 6
+            },
+            message:"Tên tài khoản phải dài hơn 6 kí tự"
+        }
+    },
     email: {
         type: String,
-        require: true,
-        default: "Anonymous",
+        required: true,
+        unique: true,
         validate:{
             validator:item=>{
                 return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(item)
@@ -32,20 +43,10 @@ const accountSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    phone: {
-        type: String,
-        default: '',
-        validate: {
-            validator: item => {
-                // Kiểm tra độ dài và ký tự số
-                return item.length === 10 && /^[0-9]+$/.test(item);
-            },
-            message: "Số điện thoại không hợp lệ"
-        }
-    },
+    
     is_active: {
         type: Boolean,
-        default: true,
+        default: false,
     },
     is_admin: {
         type: Boolean,
@@ -57,10 +58,13 @@ const accountSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
-        type:String,
         default:"https://1.bp.blogspot.com/-CV8fOXMMw60/YZ-UJ4X9sAI/AAAAAAAACMc/2Svet97exjgNdJ9CeTKUU3OuA-mnCQEzwCLcBGAsYHQ/s595/3a.jpg"
     },
+    isDeleted:{
+        type:Boolean,
+        default:false,
+    }
 }, { timestamps: true });
 
-accountSchema.plugin(AutoIncrement, { inc_field: 'accountId', start_seq: 1 });
+accountSchema.plugin(AutoIncrement, { inc_field: 'accountId' });
 export const Account = mongoose.model('Account', accountSchema);

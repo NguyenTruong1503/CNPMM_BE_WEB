@@ -42,6 +42,9 @@ export const BookController = {
 
         const result = await BookService.search(keyword);
         if (result.success) {
+            if (result.data.length === 0) {
+                return res.status(404).json(ResponseDetail(400, { message: "Không tìm thấy sách nào" }));
+            }
             return res.status(200).json(ResponseData(200, result.data));
         }else {
             return res.status(500).json(ResponseDetail(500, { message: result.message }));
