@@ -36,15 +36,25 @@ export const AuthController = {
     }, 
     refreshToken: async (req, res) => {
         const refreshToken = req.cookies.refreshToken;
+        if (!refreshToken) {
+            return res.status(401).json(ResponseDetail(401, { message: "Vui lòng đăng nhập" }));
+        }
         const result = await AuthService.refreshToken(refreshToken);
-        if (result.success){
+        if (result && result.success) {
             res.cookie("refreshToken", result.refreshToken, {
                 httpOnly: true,
                 secure: false,
                 path: '/',
-                samSite: "strict"});
+                sameSite: "strict"
+            });
             return res.status(200).json(ResponseData(200, result.data));
+        } else {
+            return res.status(400).json(ResponseDetail(400, { message: result.message }));
         }
     },
+    logoutUser: async (req, res) => {
+        res.clearCookie("refreshToken");
+        return res.status(200).json(ResponseData(200, "Đăng xuất thành công"));
+    }
 }
 
