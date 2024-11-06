@@ -4,7 +4,7 @@ import { MiddlewareController } from '../controllers/MiddlewareController.js';
 
 const router = express.Router();
 
-router.get('/', UserController.getAllUsers);
+router.get('/', MiddlewareController.verifyAdmin , UserController.getAllUsers);
 router.delete('/:id',MiddlewareController.verifyAdmin, UserController.deleteUser);
 
 export default router;

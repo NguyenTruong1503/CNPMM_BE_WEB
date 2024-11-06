@@ -14,7 +14,7 @@ export const MiddlewareController = {
                 next(); // dat het dieu kien de chay tiep
             });}
         else {
-            res.status(401).json("Bạn chưa đăng nhập");
+            return res.status(401).json("Bạn chưa đăng nhập");
         }
     },
     verifyAdmin: (req, res, next) => {
@@ -22,6 +22,6 @@ export const MiddlewareController = {
             if (req.user.is_admin) {
                 next();
             } else {
-                res.status(403).json({message: "Bạn không có quyền truy cập"});
+                return res.status(403).json({message: "Bạn không có quyền truy cập"});
     }});}
 }

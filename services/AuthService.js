@@ -1,7 +1,8 @@
 import {Account} from '../models/Account.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-
+import { promisify } from 'util';
+const verifyAsync = promisify(jwt.verify);
 export const AuthService = {
     generateAccessToken: (data) => {
         const accessToken = jwt.sign(
@@ -59,7 +60,7 @@ export const AuthService = {
                 return { success: false, message: "Sai mật khẩu" };
             }
             const data = {
-                accountId: account._id,
+                accountId: account.accountId,
                 is_admin : account.is_admin,
             };
             const accessToken = AuthService.generateAccessToken(data);
@@ -72,21 +73,17 @@ export const AuthService = {
     },
     refreshToken: async (refreshToken) => {
         try {
-            jwt.verify(refreshToken, process.env.JWT_ACCESS_KEY, (err, user)=> {
-                if (err) {
-                    return { success: false, message: "Token không hợp lệ" };
-                }
-                const data = {
-                    accountId: account._id,
-                    is_admin : account.is_admin,
-                };
-                const accessToken = AuthService.generateAccessToken(data);
-                const refreshToken = AuthService.generateRefreshToken(data);
-                return { success: true, data: {account, accessToken}, refreshToken: refreshToken };
-            });
+            const account = await verifyAsync(refreshToken, process.env.JWT_ACCESS_KEY);
+            const data = {
+                accountId: account.accountId,
+                is_admin: account.is_admin,
+            };
+            const accessToken = AuthService.generateAccessToken(data);
+            const newRefreshToken = AuthService.generateRefreshToken(data);
+            return { success: true, data: { accessToken }, refreshToken: newRefreshToken };
         } catch (error) {
             console.log(error);
             return { success: false, message: "Lỗi refresh token" };
         }
-    }
+    },
 };

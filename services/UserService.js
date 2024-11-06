@@ -16,7 +16,7 @@ export const UserService = {
             if (!user) {
                 return { success: false, message: "Người dùng không tồn tại" };
             }
-            return { success: true, data: user };
+            return { success: true, data: "Xóa thành công" };
         }catch (error) {
             console.log(error);
             return { success: false, message: "Lỗi xóa người dùng" };
