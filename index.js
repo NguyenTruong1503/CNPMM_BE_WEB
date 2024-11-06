@@ -1,21 +1,11 @@
 import express from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-<<<<<<< Updated upstream
-import { BookRoute, AccountRoute,commentRoute, genreRoute, ratingRoute, ChapterRoute, ChapterContentRoute} from './routes/index.js';
-=======
 import cors from "cors";
 import cookieParser from "cookie-parser";
-<<<<<<< Updated upstream
-import { BookRoute, AuthRoute,commentRoute, genreRoute, ratingRoute , UserRoute} from './routes/index.js';
->>>>>>> Stashed changes
+import { BookRoute, AuthRoute,commentRoute, genreRoute, ratingRoute , UserRoute, ChapterRoute, ChapterContentRoute} from './routes/index.js';
 import dotenv from 'dotenv';
-import cors from 'cors';
 
-=======
-import { BookRoute, AuthRoute, commentRoute, genreRoute, ratingRoute, UserRoute, ChapterRoute, ChapterContentRoute } from './routes/index.js';
-import dotenv from 'dotenv';
->>>>>>> Stashed changes
 
 dotenv.config();
 
@@ -48,23 +38,12 @@ mongoose.connect(URI)
 app.use("/api/comment", commentRoute);
 app.use("/api/genre", genreRoute);
 app.use("/api/rating", ratingRoute);
-<<<<<<< Updated upstream
-app.use('/api/books',BookRoute);
-<<<<<<< Updated upstream
-app.use('/api/account', AccountRoute);
-app.use('/api/chapter', ChapterRoute)
-app.use('/api/chaptercontent', ChapterContentRoute)
-=======
-app.use('/api/auth',AuthRoute);
-app.use('/api/user',UserRoute);
->>>>>>> Stashed changes
-=======
 app.use('/api/books', BookRoute);
 app.use('/api/chapter', ChapterRoute);
 app.use('/api/chaptercontent', ChapterContentRoute);
 app.use('/api/auth', AuthRoute);
 app.use('/api/user', UserRoute);
->>>>>>> Stashed changes
+
 
 app.listen(PORT, () => {
   console.log(`Server đang chạy trên cổng ${PORT}`);
