@@ -1,13 +1,14 @@
 import express from 'express';
 import { ChapterController } from '../controllers/ChapterController.js';
+import { MiddlewareController } from '../controllers/MiddlewareController.js';
 
 const router = express.Router();
 
-router.post('/create',ChapterController.CreateChapter);
+router.post('/create',MiddlewareController.verifyAdmin,ChapterController.CreateChapter);
 
-router.post('/update',ChapterController.UpdateChapter);
+router.post('/update',MiddlewareController.verifyAdmin,ChapterController.UpdateChapter);
 
-router.post('/delete', ChapterController.DeleteChapter);
+router.post('/delete', MiddlewareController.verifyAdmin, ChapterController.DeleteChapter);
 
 router.get('/:bookID/:chapter_number', ChapterController.getChapterByBookAndNumber);
 
