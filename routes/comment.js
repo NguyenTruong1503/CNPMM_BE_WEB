@@ -6,11 +6,12 @@ import {
   updateComment,
   deleteComment,
 } from "../controllers/Comment.js";
+import { MiddlewareController } from "../controllers/MiddlewareController.js";
 
 const router = express.Router();
 
 // Thêm bình luận mới
-router.post("/", addComment);
+router.post("/", MiddlewareController.verifyToken, addComment);
 
 // Lấy bình luận theo commentId
 router.get("/:commentId", getCommentById);
@@ -19,9 +20,9 @@ router.get("/:commentId", getCommentById);
 router.get("/chapter/:chapterId", getCommentsByChapterId);
 
 // Cập nhật bình luận
-router.put("/:commentId", updateComment);
+router.put("/:commentId", MiddlewareController.verifyToken, updateComment);
 
 // Xóa bình luận
-router.delete("/:commentId", deleteComment);
+router.delete("/:commentId", MiddlewareController.verifyToken, deleteComment);
 
 export default router;
