@@ -1,6 +1,5 @@
 import express from "express";
 import { BookController } from "../controllers/BookController.js";
-import { ChapterContentController } from "../controllers/ChapterContentController.js";
 import { MiddlewareController } from "../controllers/MiddlewareController.js";
 const router = express.Router();
 router.post('/',MiddlewareController.verifyAdmin,BookController.CreateBook);
