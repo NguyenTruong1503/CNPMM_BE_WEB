@@ -1,8 +1,9 @@
+
 import {Account} from '../models/Account.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { promisify } from 'util';
-import mailer from './EmailService.js';
+
 const verifyAsync = promisify(jwt.verify);
 export const AuthService = {
     generateAccessToken: (data) => {
