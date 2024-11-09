@@ -1,28 +1,31 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const commentSchema = new mongoose.Schema({
+const commentSchema = new mongoose.Schema(
+  {
     chapterId: {
-        type: Number,
-        ref: 'Chapter',
-        required: true,
+      type: mongoose.Schema.Types.ObjectId, // Thay đổi kiểu dữ liệu ở đây
+      ref: "Chapter",
+      required: true,
     },
     accountId: {
-        type: Number,
-        ref: 'Account',
-        required: true,
+      type: Number,
+      ref: "Account",
+      required: true,
     },
     content: {
-        type: String,
-        required: true,
-        validate: {
-            validator: (text) => text.length > 0,
-            message: 'Nội dung bình luận không được để trống.',
-        },
+      type: String,
+      required: true,
+      validate: {
+        validator: (text) => text.length > 0,
+        message: "Nội dung bình luận không được để trống.",
+      },
     },
     post_date: {
-        type: Date,
-        default: Date.now,
+      type: Date,
+      default: Date.now,
     },
-}, { timestamps: true });
+  },
+  { timestamps: true }
+);
 
-export const Comment = mongoose.model('Comment', commentSchema);
+export const Comment = mongoose.model("Comment", commentSchema);

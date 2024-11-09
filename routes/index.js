@@ -1,9 +1,19 @@
-import ChapterRoute from './ChapterRoute.js'
-import ChapterContentRoute from "./ChapterContentRoute.js"
-import BookRoute from './BookRoute.js'
-import AccountRoute from './AccountRoute.js'
-import commentRoute from "./comment.js";
-import genreRoute from "./genre.js";
-import ratingRoute from "./rating.js";
+import ChapterRoute from "./ChapterRoute.js";
+import ChapterContentRoute from "./ChapterContentRoute.js";
+import BookRoute from "./BookRoute.js";
+import AuthRoute from "./AuthRoute.js";
+import commentRoute from "./CommentRoute.js";
+import genreRoute from "./GenreRoute.js";
+import ratingRoute from "./RatingRoute.js";
+import UserRoute from "./UserRoute.js";
 
-export {BookRoute, AccountRoute, commentRoute, genreRoute, ratingRoute,ChapterRoute,ChapterContentRoute}
+export {
+  BookRoute,
+  AuthRoute,
+  commentRoute,
+  genreRoute,
+  ratingRoute,
+  ChapterRoute,
+  ChapterContentRoute,
+  UserRoute,
+};
