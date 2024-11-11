@@ -20,4 +20,14 @@ export const UserController = {
             return res.status(400).json(ResponseDetail(400, { message: result.message }))
         }    
     },
+    updateUser: async (req, res) => {
+        const userId = req.params.id;
+        const userData = req.body;
+        const result = await UserService.updateUser(userId, userData);
+        if (result.success){
+            return res.status(200).json(ResponseData(200, result.data))
+        }else {
+            return res.status(400).json(ResponseDetail(400, { message: result.message }))
+        }    
+    }
 }

@@ -13,13 +13,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const URI = process.env.MONGO_URI;
 
-// Chỉ cho phép origin này
-const corsOptions = {
-  origin: 'http://localhost:5173',
-  credentials: true
-};
+app.use(cors({
+  origin: 'http://localhost:5173', // URL của frontend
+  credentials: true // Cho phép gửi cookie
+}));
 
-app.use(cors(corsOptions));
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -43,6 +42,7 @@ app.use('/api/chapter', ChapterRoute);
 app.use('/api/chaptercontent', ChapterContentRoute);
 app.use('/api/auth', AuthRoute);
 app.use('/api/user', UserRoute);
+
 
 
 app.listen(PORT, () => {

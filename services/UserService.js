@@ -22,4 +22,16 @@ export const UserService = {
             return { success: false, message: "Lỗi xóa người dùng" };
         }
     },
+    updateUser: async (userId, userData) => {
+        try {
+            const user = await Account.findOneAndUpdate({accountId: userId}, userData, {new: true});
+            if (!user) {
+                return { success: false, message: "Người dùng không tồn tại" };
+            }
+            return { success: true, data: "Update thành công" };
+        }catch (error) {
+            console.log(error);
+            return { success: false, message: "Lỗi cập nhật người dùng" };
+        }
+    }
 }

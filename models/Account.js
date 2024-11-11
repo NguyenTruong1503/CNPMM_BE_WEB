@@ -43,7 +43,14 @@ const accountSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    
+    birthday: {
+        type: Date,
+        required: true,
+    },
+    sex: {
+        type: String,
+        required: true,
+    },
     is_active: {
         type: Boolean,
         default: false,
