@@ -15,17 +15,28 @@ export const AuthController = {
         const { email, password, username, birthday, sex } = req.body;
         const name = username;
 
-        if (password.length < 8) {
-            return res.status(400).json(ResponseDetail(400, { message: 'Password must be at least 8 characters long.' }));
-        }
-
-
-
         if (email && password && name && username && birthday && sex) {
             try {
                 const existingUser = await Account.findOne({ email });
-                if (existingUser) {
-                    return res.status(409).json(ResponseDetail(409, { message: 'User credentials already exist.' }));
+                if (existingUser && existingUser.is_active) {
+                    return res.status(409).json(ResponseDetail(409, { message: 'Email đã tồn tại.' }));
+                }
+                if (existingUser && !existingUser.is_active) {
+                    await Account.deleteOne({ _id: existingUser._id });
+                }
+                const existingUsername = await Account.findOne({ username });
+                if (existingUsername) {
+                    return res.status(409).json(ResponseDetail(409, { message: 'Tên tài khoản đã tồn tại.' }));
+                }
+                if (password.length < 8) {
+                    return res.status(400).json(ResponseDetail(400, { message: 'Mật khẩu bao gồm ít nhất 8 ký tự' }));
+                }
+               
+                const today = new Date();
+                const birthDate = new Date(birthday);
+        
+                if (birthDate > today) {
+                    return res.status(400).json(ResponseDetail(400, { message: 'Ngày sinh không được lớn hơn ngày hiện tại.' }));
                 }
 
                 const hashedPassword = await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT_ROUND));
@@ -38,6 +49,7 @@ export const AuthController = {
                     sex,
                 });
 
+
                 const savedUser = await newUser.save();
                 const hashedEmail = await bcrypt.hash(savedUser.email, parseInt(process.env.BCRYPT_SALT_ROUND));
                 const verifyUrl = `${process.env.APP_URL}/api/auth/verify?email=${savedUser.email}&token=${hashedEmail}`;
@@ -48,13 +60,13 @@ export const AuthController = {
                 const emailContent = emailTemplate.replace('{{verifyUrl}}', verifyUrl);
 
                 await sendMail(savedUser.email, "Chỉ còn một bước nữa để hoàn tất đăng ký của bạn!", emailContent);
-                return res.status(201). json(ResponseData(201, { message: 'Account created successfully. Please verify your email.' }));
+                return res.status(201). json(ResponseData(201, { message: 'Tài khoản đăng ký thành công. Vui lòng xác nhận qua email.' }));
             } catch (error) {
                 console.log(error);
                 return res.status(500).json(ResponseDetail(500, { message: 'Internal Server Error' }));
             }
         } else {
-            return res.status(400).json(ResponseDetail(400, { message: 'Missing required fields.' }));
+            return res.status(400).json(ResponseDetail(400, { message: 'Vui lòng điền đầy đủ thông tin.' }));
         }
     },
 
@@ -92,7 +104,6 @@ export const AuthController = {
                 secure: false,
                 sameSite: 'lax',
             });
-            console.log(req.cookies.refreshToken);
             return res.status(200).json(ResponseData(200, result.data));
         }else {
             return res.status(400).json(ResponseDetail(400, { message: result.message }));
@@ -186,7 +197,8 @@ export const AuthController = {
             console.log(error);
             return res.status(500).json(ResponseDetail(500, { message: 'Internal Server Error' }));
         }
-    }
+    },
+    
 
 }
 
