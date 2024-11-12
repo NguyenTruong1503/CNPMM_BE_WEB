@@ -2,7 +2,7 @@ import { Account } from '../models/Account.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { promisify } from 'util';
-import sendMail from '../services/EmailService.js';
+
 
 const verifyAsync = promisify(jwt.verify);
 
@@ -20,14 +20,14 @@ export const AuthService = {
             const { username, password } = authData;
             const account = await Account.findOne({ username });
             if (!account) {
-                return { success: false, message: "Tài khoản không tồn tại" };
+                return { success: false, message: "Tài khoản không tồn tại!" };
             }
             if (!account.is_active) {
-                return { success: false, message: "Tài khoản chưa được kích hoạt" };
+                return { success: false, message: "Tài khoản chưa được kích hoạt!" };
             }
             const isPasswordValid = await bcrypt.compare(password, account.password);
             if (!isPasswordValid) {
-                return { success: false, message: "Sai mật khẩu" };
+                return { success: false, message: "Tên tài khoản hoặc mật khẩu không đúng!" };
             }
             const data = { accountId: account.accountId, is_admin: account.is_admin };
             const accessToken = AuthService.generateAccessToken(data);
@@ -53,4 +53,5 @@ export const AuthService = {
             return { success: false, message: "Lỗi refresh token" };
         }
     },
+    
 };

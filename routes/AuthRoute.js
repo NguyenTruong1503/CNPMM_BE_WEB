@@ -9,6 +9,9 @@ router.post('/login', AuthController.loginUser);
 router.post('/refresh', AuthController.refreshToken);
 router.post('/logout', MiddlewareController.verifyToken,  AuthController.logoutUser);
 router.get('/verify', AuthController.verify);
+router.post('/forgot-password', AuthController.forgotPassword);
+router.post('/reset-password', AuthController.resetPassword);
+
 
 
 
