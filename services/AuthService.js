@@ -8,7 +8,7 @@ const verifyAsync = promisify(jwt.verify);
 
 export const AuthService = {
     generateAccessToken: (data) => {
-        return jwt.sign(data, process.env.JWT_ACCESS_KEY, { expiresIn: "2h" });
+        return jwt.sign(data, process.env.JWT_ACCESS_KEY, { expiresIn: "20s" });
     },
 
     generateRefreshToken: (data) => {

@@ -3,7 +3,12 @@ import bcrypt from 'bcrypt';
 import { AuthService } from '../services/AuthService.js';
 import { ResponseData, ResponseDetail } from '../services/ResponseJSON.js';
 import sendMail from '../services/EmailService.js'; // Đảm bảo import đúng
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const AuthController = {
     createAccount: async (req, res) => {
@@ -36,10 +41,14 @@ export const AuthController = {
                 const savedUser = await newUser.save();
                 const hashedEmail = await bcrypt.hash(savedUser.email, parseInt(process.env.BCRYPT_SALT_ROUND));
                 const verifyUrl = `${process.env.APP_URL}/api/auth/verify?email=${savedUser.email}&token=${hashedEmail}`;
-                console.log(verifyUrl);
-                await sendMail(savedUser.email, "Verify Email", `<a href="${verifyUrl}"> Verify </a>`);
+                const emailTemplatePath = path.resolve(__dirname, '../config/email.html');
+                const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf-8');
 
-                return res.status(201).json(ResponseData(201, { message: 'Account created successfully. Please verify your email.' }));
+    
+                const emailContent = emailTemplate.replace('{{verifyUrl}}', verifyUrl);
+
+                await sendMail(savedUser.email, "Chỉ còn một bước nữa để hoàn tất đăng ký của bạn!", emailContent);
+                return res.status(201). json(ResponseData(201, { message: 'Account created successfully. Please verify your email.' }));
             } catch (error) {
                 console.log(error);
                 return res.status(500).json(ResponseDetail(500, { message: 'Internal Server Error' }));
@@ -126,6 +135,55 @@ export const AuthController = {
     logoutUser: async (req, res) => {
         res.clearCookie("refreshToken");
         return res.status(200).json(ResponseData(200, "Đăng xuất thành công"));
+    },
+    forgotPassword: async (req, res) => {
+        const { email } = req.body;
+
+        try {
+            const user = await Account.findOne({ email });
+            if (!user) {
+                return res.status(404).json(ResponseDetail(404, { message: 'Tài khoản không tồn tại.' }));
+            }
+
+            const hashedEmail = await bcrypt.hash(email, parseInt(process.env.BCRYPT_SALT_ROUND));
+            const resetUrl = `${process.env.FRONTEND_URL}/reset-password?email=${email}&token=${hashedEmail}`;
+            const emailTemplatePath = path.resolve(__dirname, '../config/forgotPassword.html');
+            const emailTemplate = fs.readFileSync(emailTemplatePath, 'utf-8');
+            const emailContent = emailTemplate.replace('{{resetUrl}}', resetUrl);
+
+            await sendMail(email, "Khôi phục mật khẩu", emailContent);
+            return res.status(201).json(ResponseData(201, { message: 'Đã gửi yêu cầu khôi phục mật khẩu.' }));
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json(ResponseDetail(500, { message: 'Internal Server Error' }));
+        }
+    },
+    
+    resetPassword: async (req, res) => {
+        const { email, token } = req.query;
+        const { newPassword } = req.body;
+
+        try {
+            const isMatch = await bcrypt.compare(email, token);
+            if (!isMatch) {
+                return res.status(400).json(ResponseDetail(400, { message: 'Invalid verification token.' }));
+            }
+
+            const user = await Account.findOne({ email });
+            if (!user) {
+                return res.status(404).json(ResponseDetail(404, { message: 'User not found.' }));
+            }
+
+            const hashedPassword = await bcrypt.hash(newPassword, parseInt(process.env.BCRYPT_SALT_ROUND));
+            user.password = hashedPassword;
+            await user.save();
+
+            return res.status(200).json(ResponseData(200, { message: 'Mật khẩu đã được reset thành công.' }));
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json(ResponseDetail(500, { message: 'Internal Server Error' }));
+        }
     }
+
 }
 

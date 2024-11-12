@@ -15,7 +15,7 @@ const sendMail = async (to, subject, htmlContent) => {
         });
 
         const options = {
-            from: mailConfig.FROM_ADDRESS,
+            from: `"Manga Store - Đuổi Theo Manga" <${mailConfig.FROM_ADDRESS}>`,
             to,
             subject,
             html: htmlContent,
