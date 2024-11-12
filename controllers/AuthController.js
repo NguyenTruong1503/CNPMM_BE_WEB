@@ -160,25 +160,28 @@ export const AuthController = {
     },
     
     resetPassword: async (req, res) => {
-        const { email, token } = req.query;
-        const { newPassword } = req.body;
-
+        const { email, token, newPassword } = req.body;
+    
         try {
+            if (!email || !token) {
+                return res.status(400).json(ResponseDetail(400, { message: 'Email and token are required.' }));
+            }
+    
             const isMatch = await bcrypt.compare(email, token);
             if (!isMatch) {
                 return res.status(400).json(ResponseDetail(400, { message: 'Invalid verification token.' }));
             }
-
+    
             const user = await Account.findOne({ email });
             if (!user) {
-                return res.status(404).json(ResponseDetail(404, { message: 'User not found.' }));
+                return res.status(404).json(ResponseDetail(404, { message: 'Tài khoản không tồn tại.' }));
             }
-
+    
             const hashedPassword = await bcrypt.hash(newPassword, parseInt(process.env.BCRYPT_SALT_ROUND));
             user.password = hashedPassword;
             await user.save();
-
-            return res.status(200).json(ResponseData(200, { message: 'Mật khẩu đã được reset thành công.' }));
+    
+            return res.status(200).json(ResponseData(200, { message: 'Tài khoản đã được khôi phục.' }));
         } catch (error) {
             console.log(error);
             return res.status(500).json(ResponseDetail(500, { message: 'Internal Server Error' }));
