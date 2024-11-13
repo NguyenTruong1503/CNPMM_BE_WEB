@@ -3,8 +3,8 @@ import { CommentService } from "../services/CommentService.js";
 import { ResponseData, ResponseDetail } from "../services/ResponseJSON.js";
 
 export const CommentController = {
-  addComment: async (req, res) => {
-    const { chapterId, accountId, content } = req.body;
+    addComment: async (req, res) => {
+    const { accountId, chapterId, content, post_date } = req.body;
     if (!chapterId || !accountId || !content) {
       return res.status(400).json(
         ResponseDetail(400, {
@@ -17,6 +17,7 @@ export const CommentController = {
       chapterId,
       accountId,
       content,
+      post_date
     });
     if (result.success) {
       return res.status(201).json(ResponseData(201, result.data));

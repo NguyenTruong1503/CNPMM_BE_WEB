@@ -10,4 +10,4 @@ router.delete('/:bookId', MiddlewareController.verifyAdmin,BookController.Delete
 router.patch('/:bookId',MiddlewareController.verifyAdmin, BookController.UpdateBook);
 
 
-export default router;
+export default router;  

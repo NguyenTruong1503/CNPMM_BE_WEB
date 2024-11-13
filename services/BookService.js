@@ -12,7 +12,7 @@ export const BookService = {
             // Kiểm tra tính hợp lệ của dữ liệu
             let error = book.validateSync();
             if (error) {
-                return { success: false, message: Object.values(error.errors)[0].message || 'Lỗi' };
+                return { success: false, message: Object.values(error.errors)[0].message || 'Lỗi dữ liệu không đúng' };
             }
 
             // Lưu sách vào cơ sở dữ liệu
@@ -20,6 +20,7 @@ export const BookService = {
             if (response) {
                 return { success: true, data: book };
             }
+            console.log('hihi'+response);
             return { success: false, message: "Đăng truyện không thành công" };
         } catch (error) {
             console.log(error);
@@ -64,8 +65,8 @@ export const BookService = {
         try {
             const book = await Book.findOneAndUpdate({ bookId: bookId }, bookData, { new: true });
             return { success: true, data: book };
-        }catch{
-            return { success: false, message: "Lỗi cập nhật dữ liệu" };
+        }catch(error){
+            return { success: false, message:  error.message};
         }
     }
 };
