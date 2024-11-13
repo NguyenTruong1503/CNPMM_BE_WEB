@@ -4,7 +4,7 @@ export const OrderController = {
     createOrder: async (req, res) => {
     try {
         const data = req.body;
-    const result = await OrderService.createOrder(data);
+        const result = await OrderService.createOrder(data);
     if (result.status === "OK") {
       const paymentUrl = await PaymentService.createPaymentUrl(result.data._id.toString(), result.data.price, 'Payment for booking');
       return res.status(200).json({
@@ -26,7 +26,6 @@ export const OrderController = {
     handlePaymentReturn: async (req, res) => {
         try {
             const { orderId, resultCode } = req.query;
-            console.log(req.query);
             const oderID = orderId.split('_')[0]; // Sử dụng orderId để cập nhật
             const paymentStatus = resultCode === '0' ? 'success' : 'failed';
 
@@ -49,5 +48,21 @@ export const OrderController = {
                 message: e.message,
             });
         }
+  },
+    checkPaidBook: async (req, res) => {
+    try {
+        const {bookID,accountID} = req.params;
+        const result = await OrderService.checkPaidBook(bookID,accountID);
+    if (result) {
+      return res.status(200).json({ data: result });
+    } else {
+      return res.status(400).json({ data: result });
     }
+  } catch (e) {
+    return res.status(500).json({
+      status: "ERR",
+      message: e.message,
+    });
+  }
+    },
 }

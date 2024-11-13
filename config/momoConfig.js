@@ -4,7 +4,7 @@ const momoConfig = {
     secretKey: 'K951B6PE1waDMi640xX08PD3vg6EkVlz',
     requestType: 'payWithMethod',
     redirectUrl: 'http://localhost:3000/api/order/momo_return',
-    ipnUrl: 'http://localhost:8080/booking/momo_ipn',
+    ipnUrl: 'http://localhost:3000/api/order/momo_return',
     endpoint: 'https://test-payment.momo.vn/v2/gateway/api/create'
 };
 

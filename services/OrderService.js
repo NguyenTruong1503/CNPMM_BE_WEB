@@ -13,11 +13,18 @@ export const OrderService = {
                     accountID: data.accountID,
                     bookID: data.bookID,
                 });
-                if (existingOrder)
-                    return ({
-                        status: "ERR",
-                        message: "This book has already bought",
-                    });
+                if (existingOrder) {
+                    if (existingOrder.status === "Đã thanh toán")
+                        return ({
+                            status: "ERR",
+                            message: "This book has already bought",
+                        });
+                    else return ({
+                            status: "OK",
+                            message: "SUCCESS",
+                            data: existingOrder,
+                        });
+                }
                 else {
                     const newOrder = new Order({
                         bookID: data.bookID,
@@ -28,7 +35,6 @@ export const OrderService = {
                         date: data.date,
                     });
                     const response = await newOrder.save();
-                    console.log(response)
                     if (response)
                         return ({
                             status: "OK",
@@ -48,11 +54,21 @@ export const OrderService = {
 
     updateOrderStatus: async (orderID,status) => {
         try {
-            const response=  await Order.findOneAndUpdate({ orderID: orderID },
+            const response=  await Order.findOneAndUpdate({ _id: orderID },
                 { status: status },
                 { new: true })
             if (response) return { status:200, message: response }
             return {status: 400 , message: "Cập nhật đơn không thành công" }
+        }
+        catch (error) {
+            console.log(error)
+            throw error
+        }
+    },
+    checkPaidBook: async (bookID,accountID) => {
+        try {
+            const response=  await Order.findOne({ bookID: bookID, accountID: accountID, status: "Đã thanh toán" })
+            return response
         }
         catch (error) {
             console.log(error)
