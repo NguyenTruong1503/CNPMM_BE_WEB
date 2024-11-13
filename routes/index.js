@@ -6,7 +6,7 @@ import commentRoute from "./CommentRoute.js";
 import genreRoute from "./GenreRoute.js";
 import ratingRoute from "./RatingRoute.js";
 import UserRoute from "./UserRoute.js";
-
+import OrderRoute from "./OrderRoute.js"
 export {
   BookRoute,
   AuthRoute,
@@ -16,4 +16,5 @@ export {
   ChapterRoute,
   ChapterContentRoute,
   UserRoute,
+  OrderRoute,
 };

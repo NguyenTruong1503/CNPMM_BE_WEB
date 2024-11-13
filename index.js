@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { BookRoute, AuthRoute,commentRoute, genreRoute, ratingRoute , UserRoute, ChapterRoute, ChapterContentRoute} from './routes/index.js';
+import { BookRoute, AuthRoute,commentRoute, genreRoute, ratingRoute , UserRoute, ChapterRoute, ChapterContentRoute, OrderRoute} from './routes/index.js';
 import dotenv from 'dotenv';
 
 
@@ -43,6 +43,7 @@ app.use('/api/chapter', ChapterRoute);
 app.use('/api/chaptercontent', ChapterContentRoute);
 app.use('/api/auth', AuthRoute);
 app.use('/api/user', UserRoute);
+app.use('/api/order', OrderRoute);
 
 
 app.listen(PORT, () => {

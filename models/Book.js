@@ -33,6 +33,7 @@ const bookSchema = new mongoose.Schema({
     thumbnail: {
         type: String, // Đường dẫn ảnh bìa
         required: true,
+        default: "https://cdn.kona-blue.com/upload/kona-blue_com/post/images/2024/09/18/457/avatar-mac-dinh-8.jpg"
     },
     is_delete: {
         type: Boolean, // Trạng thái bị xóa
