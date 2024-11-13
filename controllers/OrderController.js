@@ -24,7 +24,7 @@ export const OrderController = {
     },
 
     handlePaymentReturn: async (req, res) => {
-        try {
+      try {
             const { orderId, resultCode } = req.query;
             const oderID = orderId.split('_')[0]; // Sử dụng orderId để cập nhật
             const paymentStatus = resultCode === '0' ? 'success' : 'failed';
