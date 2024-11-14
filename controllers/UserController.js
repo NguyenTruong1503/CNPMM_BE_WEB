@@ -39,4 +39,15 @@ export const UserController = {
       return res.status(500).json(ResponseDetail(500, { message: error }));
     }
   },
+  findUserById: async (req, res) => {
+    const userId = req.params.id;
+    const result = await UserService.findUserById(userId);
+    if (result.success) {
+      return res.status(200).json(ResponseData(200, result.data));
+    } else {
+      return res
+        .status(400)
+        .json(ResponseDetail(400, { message: result.message }));
+    }
+  },
 };
