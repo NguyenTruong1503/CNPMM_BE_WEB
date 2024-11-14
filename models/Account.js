@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
 import pkg from 'mongoose-sequence';  // Import AutoIncrement
+import { Rating } from './Rating.js';
 const AutoIncrement = pkg(mongoose);
 
 const accountSchema = new mongoose.Schema({
-    accountId : {
+    accountId: {
         type: Number,
         unique: true,
     },
@@ -11,32 +12,32 @@ const accountSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        validate:{
-            validator:item=>{
-                return item.length >= 6
+        validate: {
+            validator: item => {
+                return item.length >= 6;
             },
-            message:"Tên tài khoản phải dài hơn 6 kí tự"
+            message: "Tên tài khoản phải dài hơn 6 kí tự"
         }
     },
     email: {
         type: String,
         required: true,
         unique: true,
-        validate:{
-            validator:item=>{
-                return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(item)
+        validate: {
+            validator: item => {
+                return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(item);
             },
-            message:"Email không hợp lệ"
+            message: "Email không hợp lệ"
         }
     },
     password: {
         type: String,
         required: true,
-        validate:{
-            validator:item=>{
-                return item.length >= 8
+        validate: {
+            validator: item => {
+                return item.length >= 8;
             },
-            message:"Mật khẩu phải dài hơn 8 kí tự"
+            message: "Mật khẩu phải dài hơn 8 kí tự"
         }
     },
     name: {
@@ -65,13 +66,20 @@ const accountSchema = new mongoose.Schema({
     },
     avatar: {
         type: String,
-        default:"https://1.bp.blogspot.com/-CV8fOXMMw60/YZ-UJ4X9sAI/AAAAAAAACMc/2Svet97exjgNdJ9CeTKUU3OuA-mnCQEzwCLcBGAsYHQ/s595/3a.jpg"
+        default: "https://1.bp.blogspot.com/-CV8fOXMMw60/YZ-UJ4X9sAI/AAAAAAAACMc/2Svet97exjgNdJ9CeTKUU3OuA-mnCQEzwCLcBGAsYHQ/s595/3a.jpg"
     },
-    isDeleted:{
-        type:Boolean,
-        default:false,
+    isDeleted: {
+        type: Boolean,
+        default: false,
     }
 }, { timestamps: true });
+
+accountSchema.post('findOneAndDelete', async function (doc) {
+    if (doc) {
+        await Rating.deleteMany({ accountId: doc._id });  
+    }
+});
+
 
 accountSchema.plugin(AutoIncrement, { inc_field: 'accountId' });
 export const Account = mongoose.model('Account', accountSchema);

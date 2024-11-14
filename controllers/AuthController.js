@@ -99,10 +99,12 @@ export const AuthController = {
         };
         const result = await AuthService.loginUser(accountData);    
         if (result.success){
+            const refreshTokenExpiry = 7 * 24 * 60 * 60 * 1000;
             res.cookie("refreshToken", result.refreshToken, {
                 httpOnly: true,
                 secure: false,
                 sameSite: 'lax',
+                maxAge: refreshTokenExpiry
             });
             return res.status(200).json(ResponseData(200, result.data));
         }else {

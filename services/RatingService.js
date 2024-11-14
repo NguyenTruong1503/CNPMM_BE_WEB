@@ -4,9 +4,9 @@ import { Rating } from "../models/Rating.js";
 export const RatingService = {
   addRating: async (ratingData) => {
     try {
-      const { bookId, accountId, star } = ratingData;
+      const { bookId, accountId, star, content } = ratingData;
 
-      if (!bookId || !accountId || star === undefined) {
+      if (!bookId || !accountId || star === undefined || !content) {
         return {
           success: false,
           status: 400,
@@ -18,6 +18,7 @@ export const RatingService = {
         bookId,
         accountId,
         star,
+        content,
       });
       await newRating.save();
 
@@ -67,7 +68,12 @@ export const RatingService = {
 
   getRatingsByBookId: async (bookId) => {
     try {
-      const ratings = await Rating.find({ bookId });
+      const ratings = await Rating.find({ bookId })
+      .populate({
+        path: 'accountId',
+        select: 'name email avatar'
+      })
+      .populate('bookId');
       return {
         success: true,
         data: {
@@ -86,7 +92,7 @@ export const RatingService = {
 
   updateRating: async (ratingId, ratingData) => {
     try {
-      const { star } = ratingData;
+      const { star, content } = ratingData;
 
       if (star === undefined) {
         return {
@@ -98,7 +104,7 @@ export const RatingService = {
 
       const updatedRating = await Rating.findByIdAndUpdate(
         ratingId,
-        { star },
+        { star, content },
         { new: true }
       );
 
@@ -153,4 +159,28 @@ export const RatingService = {
       };
     }
   },
+  getAllRating: async () => {
+    try {
+      const ratings = await Rating.find()
+      .populate({
+        path: 'accountId',
+        select: 'name email avatar'
+      })
+      .populate('bookId');;
+      return {
+        success: true,
+        status: 200,
+        data: {
+          message: "Lấy tất cả đánh giá thành công.",
+          ratings,
+        },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        status: 500,
+        message: "Đã xảy ra lỗi khi lấy đánh giá: " + error.message,
+      };
+    }
+  }
 };

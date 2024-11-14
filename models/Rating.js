@@ -2,12 +2,12 @@ import mongoose from 'mongoose';
 
 const ratingSchema = new mongoose.Schema({
     bookId: {
-        type: Number,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Book',
         required: true,
     },
     accountId: {
-        type: Number,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Account',
         required: true,
     },
@@ -16,6 +16,10 @@ const ratingSchema = new mongoose.Schema({
         required: true,
         min: 0,
         max: 5,
+    },
+    content: {
+        type: String,
+        required: true,
     },
     date: {
         type: Date,
