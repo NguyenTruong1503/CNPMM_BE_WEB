@@ -8,7 +8,7 @@ const verifyAsync = promisify(jwt.verify);
 
 export const AuthService = {
     generateAccessToken: (data) => {
-        return jwt.sign(data, process.env.JWT_ACCESS_KEY, { expiresIn: "2h" });
+        return jwt.sign(data, process.env.JWT_ACCESS_KEY, { expiresIn: "20s" });
     },
 
     generateRefreshToken: (data) => {
@@ -18,7 +18,7 @@ export const AuthService = {
     loginUser: async (authData) => {
         try {
             const { username, password } = authData;
-            const account = await Account.findOne({ username });
+            const account = await Account.findOne({ username, isDeleted: false });
             if (!account) {
                 return { success: false, message: "Tài khoản không tồn tại!" };
             }
