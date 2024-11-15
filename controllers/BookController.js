@@ -23,9 +23,13 @@ export const BookController = {
         }
     },
     GetAllBooks: async (req, res) => {
-        const result = await BookService.getAllBooks();
+        const page = parseInt(req.query.page) || 1;
+        let limit = parseInt(req.query.limit)|| 10;
+        const skip = (page - 1) * limit;
+
+        const result = await BookService.getAllBooks(skip,limit);
         if (result.success) {
-            return res.status(200).json(ResponseData(200, result.data));
+            return res.status(200).json({ data: result.data, totalPages: result.totalPages });
         }else {
             return res.status(500).json(ResponseDetail(500, { message: result.message }));
         }

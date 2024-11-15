@@ -27,10 +27,11 @@ export const BookService = {
             return { success: false, message: "Lỗi đăng truyện" };
         }
     },
-    getAllBooks: async () => {
+    getAllBooks: async (skip, limit) => {
         try {
-            const books = await Book.find({ is_delete: 0 });
-            return { success: true, data: books };
+            const books = await Book.find({ is_delete: 0 }).skip(skip).limit(limit);
+            const totalBooks = await Book.countDocuments();
+            return { success: true, data: books, totalPages: Math.ceil(totalBooks / limit)};
         }catch(error){
             console.log(error);
             return { success: false, message: "Lỗi lấy dữ liệu" };
