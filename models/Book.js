@@ -21,8 +21,8 @@ const bookSchema = new mongoose.Schema({
         required: true,
     },
     genre: {
-        type: Number,
-        ref: 'Genre', // liên kết tới thể loại (Genre)
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Genre', 
         required: true,
     },
     price: {
