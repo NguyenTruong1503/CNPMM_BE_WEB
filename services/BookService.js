@@ -48,7 +48,7 @@ export const BookService = {
     },
     getBookById : async (bookId) => {
         try {
-            const book = await Book.findOne({ bookId: bookId, is_delete: 0 });
+            const book = await Book.findOne({ bookId: bookId, is_delete: 0 }).populate('genre');
             return { success: true, data: book };
         }catch{
             return { success: false, message: "Lỗi lấy dữ liệu" };
