@@ -20,7 +20,6 @@ export const BookService = {
             if (response) {
                 return { success: true, data: book };
             }
-            console.log('hihi'+response);
             return { success: false, message: "Đăng truyện không thành công" };
         } catch (error) {
             console.log(error);
@@ -48,7 +47,7 @@ export const BookService = {
     },
     getBookById : async (bookId) => {
         try {
-            const book = await Book.findOne({ bookId: bookId, is_delete: 0 });
+            const book = await Book.findOne({ bookId: bookId, is_delete: 0 }).populate('genre');
             return { success: true, data: book };
         }catch{
             return { success: false, message: "Lỗi lấy dữ liệu" };
