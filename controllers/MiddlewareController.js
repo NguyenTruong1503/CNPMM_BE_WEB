@@ -8,7 +8,7 @@ export const MiddlewareController = {
       const accessToken = token.split(" ")[1];
       jwt.verify(accessToken, process.env.JWT_ACCESS_KEY, (err, user) => {
         if (err) {
-          return res.status(403).json({ message: "Token không hợp lệ" });
+          return res.status(403).json({ message:err.message });
         }
         req.user = user;
         next(); // dat het dieu kien de chay tiep

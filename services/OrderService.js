@@ -1,6 +1,25 @@
 import { Order } from "../models/Order.js";
 
 export const OrderService = {
+    getOrderByID: async (orderID) => {
+        try {
+            const order = await Order.findOne({_id: orderID})
+            return { success: true, data: order};
+        }catch(error){
+            console.log(error);
+            return { success: false, message: "Lỗi lấy dữ liệu" };
+        }
+    },
+    getAllOrders: async (skip, limit) => {
+        try {
+            const orders = await Order.find().skip(skip).limit(limit);
+            const totalOrders = await Order.countDocuments();
+            return { success: true, data: orders, totalPages: Math.ceil(totalOrders / limit)};
+        }catch(error){
+            console.log(error);
+            return { success: false, message: "Lỗi lấy dữ liệu" };
+        }
+    },
     createOrder: async (data) => {
         try {
             if (!data.bookID || !data.accountID || !data.date || !data.price)
@@ -74,5 +93,21 @@ export const OrderService = {
             console.log(error)
             throw error
         }
-    }
+    },
+    updateOrder: async (orderID, order) => {
+        try {
+            const result = await Order.findOneAndUpdate({_id: orderID}, order, { new: true });
+            return { success: true, data: result };
+        }catch(error){
+            return { success: false, message:  error.message};
+        }
+    },
+    deleteOrder: async (orderID) => {
+        try {
+            const order = await Order.deleteOne({_id: orderID});
+            return { success: true, data: order };
+        }catch{
+            return { success: false, message: "Lỗi xóa dữ liệu" };
+        }
+    },
 }

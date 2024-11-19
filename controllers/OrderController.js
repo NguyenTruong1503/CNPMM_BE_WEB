@@ -1,6 +1,26 @@
 import PaymentService from "../services/PaymentService.js";
 import { OrderService } from "../services/OrderService.js";
 export const OrderController = {
+  getOrderByID: async (req, res) => {
+        const orderID = req.params.orderID
+        const result = await OrderService.getOrderByID(orderID);
+        if (result.success) {
+            return res.status(200).json({ data: result.data });
+        }else {
+            return res.status(500).json(ResponseDetail(500, { message: result.message }));
+        }
+    },
+    getAllOrders: async (req, res) => {
+        const page = parseInt(req.query.page) || 1;
+        let limit = parseInt(req.query.limit)|| 10;
+        const skip = (page - 1) * limit;
+        const result = await OrderService.getAllOrders(skip,limit);
+        if (result.success) {
+            return res.status(200).json({ data: result.data, totalPages: result.totalPages });
+        }else {
+            return res.status(500).json(ResponseDetail(500, { message: result.message }));
+        }
+    },
     createOrder: async (req, res) => {
     try {
         const data = req.body;
@@ -64,5 +84,23 @@ export const OrderController = {
       message: e.message,
     });
   }
+  },
+    updateOrder: async (req, res) => {
+        const orderID = req.params.orderID;
+        const order = req.body;
+        const result = await OrderService.updateOrder(orderID, order);
+        if (result.success) {
+          return res.status(200).json({ data: result.data } );
+        }
+        return res.status(500).json(ResponseDetail(500, { message: result.message }));
+  },
+    deleteOrder: async (req, res) => {
+        const orderID = req.params.orderID;
+        const result = await OrderService.deleteOrder(orderID);
+        if (result.success) {
+          return res.status(200).json({ data: result.data });
+        }else {
+            return res.status(500).json(ResponseDetail(500, { message: result.message }));
+        }
     },
 }
