@@ -113,33 +113,25 @@ export const AuthController = {
     }, 
     refreshToken: async (req, res) => {
         const refreshToken1 = req.cookies.refreshToken;
-        
-        // Check if the refresh token is present
         if (!refreshToken1) {
             return res.status(401).json(ResponseDetail(401, { message: "Vui lòng đăng nhập" }));
         }
     
         try {
-            // Call your AuthService to refresh the token
             const result = await AuthService.refreshToken(refreshToken1);
-    
-            // Check if the service successfully returned a new token
             if (result.success) {
-                // Set the new refresh token in a secure cookie
+                const refreshTokenExpiry = 7 * 24 * 60 * 60 * 1000;
                 res.cookie('refreshToken', result.refreshToken, {
                     httpOnly: true,
                     secure: false,
                     sameSite: 'lax',
+                    maxAge: refreshTokenExpiry
                 });
-    
-                // Return the new access token and any other data needed
                 return res.status(200).json(ResponseData(200, result.data));
             } else {
-                // Return an error if refreshing the token failed
                 return res.status(400).json(ResponseDetail(400, { message: result.message }));
             }
         } catch (error) {
-            // Handle any errors in the refresh process
             console.error("Error in refreshing token:", error);
             return res.status(500).json(ResponseDetail(500, { message: "Lỗi máy chủ" }));
         }

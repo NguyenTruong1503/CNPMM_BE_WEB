@@ -6,9 +6,11 @@ import { promisify } from "util";
 const verifyAsync = promisify(jwt.verify);
 
 export const AuthService = {
-  generateAccessToken: (data) => {
-    return jwt.sign(data, process.env.JWT_ACCESS_KEY, { expiresIn: "20m" });
-  },
+
+    generateAccessToken: (data) => {
+        return jwt.sign(data, process.env.JWT_ACCESS_KEY, { expiresIn: "2h" });
+    },
+
 
   generateRefreshToken: (data) => {
     return jwt.sign(data, process.env.JWT_REFRESH_KEY, { expiresIn: "7d" });
