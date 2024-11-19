@@ -20,7 +20,6 @@ export const BookService = {
             if (response) {
                 return { success: true, data: book };
             }
-            console.log('hihi'+response);
             return { success: false, message: "Đăng truyện không thành công" };
         } catch (error) {
             console.log(error);
