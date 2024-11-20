@@ -5,6 +5,19 @@ export const ReadBookService = {
   addReadBook: async (readBookData) => {
     try {
       const { accountId, bookId, readStatus, currentPage } = readBookData;
+
+      // Check if a record with the same bookId and accountId already exists
+      const existingReadBook = await ReadBook.findOne({ accountId, bookId });
+
+      if (existingReadBook) {
+        return {
+          success: true,
+          message: "Sách này đã được thêm vào danh sách đọc của bạn.",
+          data: existingReadBook,
+        };
+      }
+
+      // If no existing record, create a new one
       const readBook = new ReadBook({
         accountId,
         bookId,
@@ -21,10 +34,12 @@ export const ReadBookService = {
         };
       }
 
+      // Save the new readBook
       const response = await readBook.save();
       if (response) {
         return { success: true, data: readBook };
       }
+
       return { success: false, message: "Thêm sách đang đọc không thành công" };
     } catch (error) {
       console.log(error);

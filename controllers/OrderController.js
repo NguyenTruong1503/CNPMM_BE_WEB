@@ -1,6 +1,18 @@
 import PaymentService from "../services/PaymentService.js";
 import { OrderService } from "../services/OrderService.js";
 export const OrderController = {
+  getOrderByAccountID: async (req, res) => {
+        const accountID = req.params.accountID
+        const page = parseInt(req.query.page) || 1;
+        let limit = parseInt(req.query.limit)|| 10;
+        const skip = (page - 1) * limit;
+        const result = await OrderService.getOrderByAccountID(accountID,skip,limit);
+        if (result.success) {
+            return res.status(200).json({ data: result.data, totalPages: result.totalPages });
+        }else {
+            return res.status(500).json(ResponseDetail(500, { message: result.message }));
+        }
+    },
   getOrderByID: async (req, res) => {
         const orderID = req.params.orderID
         const result = await OrderService.getOrderByID(orderID);
