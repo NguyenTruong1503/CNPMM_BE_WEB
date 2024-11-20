@@ -16,6 +16,8 @@ router.post(
   ChapterController.UpdateChapter
 );
 
+router.get("/viewtotal", ChapterController.getViewTotal);
+
 router.delete(
   "/:id",
   MiddlewareController.verifyAdmin,

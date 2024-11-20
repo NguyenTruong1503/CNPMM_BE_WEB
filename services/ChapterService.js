@@ -75,4 +75,20 @@ export const ChapterService = {
       throw error;
     }
   },
+  getViewTotal: async () => {
+    try {
+        const total = await Chapter.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: "$chapter_view" }
+                }
+            }
+        ])
+        return await total[0].total
+    }catch(error){
+        console.log(error)
+        throw error
+    }
+},
 };

@@ -50,7 +50,7 @@ export const BookService = {
             const book = await Book.findOne({ bookId: bookId, is_delete: 0 }).populate('genre');
             return { success: true, data: book };
         }catch{
-            return { success: false, message: "Lỗi lấy dữ liệu" };
+            return { success: false, message: "Lỗi lấy dữ liệu " };
         }
     },
     deleteBook: async (bookId) => {
@@ -67,6 +67,39 @@ export const BookService = {
             return { success: true, data: book };
         }catch(error){
             return { success: false, message:  error.message};
+        }
+    },
+    getTotal: async () => {
+        try {
+            const total = await Book.countDocuments({});
+            return { success: true, data: total };
+        } catch (error) {
+            return { success: false, message: "Lỗi lấy dữ liệu" };
+        }
+    },
+    getBookByGenre: async (genre) => {
+        try {
+            const books = await Book.find({ genre: genre, is_delete: 0 })
+            .populate('genre');
+            return { success: true, data: books };
+        } catch (error) {
+            return { success: false, message: "Lỗi lấy dữ liệu" };
+        }
+    },
+    getFreeBook: async ()=> {
+        try {
+            const books = await Book.find({ price: 0, is_delete: 0 });
+            return { success: true, data: books };
+        } catch (error) {
+            return { success: false, message: "Lỗi lấy dữ liệu" };
+        }
+    },
+    getFeeBook : async ()=> {
+        try {
+            const books = await Book.find({ price: { $ne: 0 }, is_delete: 0 });
+            return { success: true, data: books };
+        } catch (error) {
+            return { success: false, message: "Lỗi lấy dữ liệu" };
         }
     }
 };
