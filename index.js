@@ -17,6 +17,7 @@ import {
 } from "./routes/index.js";
 import dotenv from "dotenv";
 import ReadBookRoute from "./routes/ReadBookRoute.js";
+import { Book } from "./models/Book.js";
 dotenv.config();
 
 const app = express();
@@ -44,7 +45,7 @@ mongoose
   .catch((err) => {
     console.log("err", err);
   });
-
+  
 // Định nghĩa các route
 app.use("/api/comment", commentRoute);
 app.use("/api/genre", genreRoute);

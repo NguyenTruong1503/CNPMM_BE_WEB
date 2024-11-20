@@ -39,6 +39,6 @@ export const ChapterContentService = {
             console.log(error)
             return res.status(500).json(ResponseDetail(500, { message: "Lỗi tải chương truyện" }))
         }
-    }
+    },
 
 }

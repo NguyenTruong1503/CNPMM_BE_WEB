@@ -1,4 +1,5 @@
 
+import { get } from "mongoose";
 import { BookService } from "../services/BookService.js";
 import { ResponseData, ResponseDetail } from "../services/ResponseJSON.js";
 
@@ -72,6 +73,18 @@ export const BookController = {
             return res.status(500).json(ResponseDetail(500, { message: result.message }));
         }
     },
+    GetTotalBooks: async (req, res) => {
+        try {
+            const result = await BookService.getTotal();
+            if (result.success) {
+                return res.status(200).json(ResponseData(200, result.data));
+            } else {
+                return res.status(500).json(ResponseDetail(500, { message: result.message }));
+            }
+        } catch (err) {
+            return res.status(500).json(ResponseDetail(500, { message: 'Internal Server Error' }));
+        }
+    },
     UpdateBook: async (req, res) => {
         const bookId = req.params.bookId;
         const bookData = {
@@ -87,5 +100,31 @@ export const BookController = {
             return res.status(200).json(ResponseData(200, result.data));
         }
         return res.status(500).json(ResponseDetail(500, { message: result.message }));
+    },
+    getBookByGenre: async (req, res) => {
+        const genre = req.params.genreId;
+        const result = await BookService.getBookByGenre(genre);
+        if (result.success) {
+            return res.status(200).json(ResponseData(200, result.data));
+        } else {
+            return res.status(500).json(ResponseDetail(500, { message: result.message }));
+        }
+    },
+    getFreeBook: async (req, res) => {
+        const result = await BookService.getFreeBook();
+        if (result.success) {
+            return res.status(200).json(ResponseData(200, result.data));
+        } else {
+            return res.status(500).json(ResponseDetail(500, { message: result.message }));
+        }
+    },
+    getFeeBook: async (req, res) => {
+        const result = await BookService.getFeeBook();
+        if (result.success) {
+            return res.status(200).json(ResponseData(200, result.data));
+        } else {
+            return res.status(500).json(ResponseDetail(500, { message: result.message }));
+        }
     }
+    
 };
