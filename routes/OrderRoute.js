@@ -4,6 +4,7 @@ import { MiddlewareController } from '../controllers/MiddlewareController.js';
 
 const router = express.Router();
 
+router.get("/getOrderByAccountID/:accountID", MiddlewareController.verifyToken, OrderController.getOrderByAccountID);
 router.get("/getOrderByID/:orderID", MiddlewareController.verifyToken, OrderController.getOrderByID);
 router.get("/getAll", OrderController.getAllOrders);
 router.post('/buybook', MiddlewareController.verifyToken, OrderController.createOrder);

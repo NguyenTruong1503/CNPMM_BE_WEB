@@ -1,6 +1,16 @@
 import { Order } from "../models/Order.js";
 
 export const OrderService = {
+    getOrderByAccountID: async (accountID,skip,limit) => {
+        try {
+            const order = await Order.find({ accountID: accountID }).skip(skip).limit(limit);
+            const totalOrders = await Order.countDocuments({accountID:accountID});
+            return { success: true, data: order, totalPages: Math.ceil(totalOrders / limit)};
+        }catch(error){
+            console.log(error);
+            return { success: false, message: "Lỗi lấy dữ liệu" };
+        }
+    },
     getOrderByID: async (orderID) => {
         try {
             const order = await Order.findOne({_id: orderID})
