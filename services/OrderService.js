@@ -120,4 +120,20 @@ export const OrderService = {
             return { success: false, message: "Lỗi xóa dữ liệu" };
         }
     },
+    getPriceAll : async () => {
+        try {
+            const price = await Order.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: "$price" }
+                    }
+                }
+            ]);
+            return { success: true, data: price[0].total };
+        } catch (error) {
+            console.log(error);
+            return { success: false, message: "Lỗi lấy dữ liệu" };
+        }
+    }
 }

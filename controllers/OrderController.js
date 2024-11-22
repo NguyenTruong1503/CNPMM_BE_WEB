@@ -115,4 +115,12 @@ export const OrderController = {
             return res.status(500).json(ResponseDetail(500, { message: result.message }));
         }
     },
+    getPriceAll: async (req, res) => {
+        const result = await OrderService.getPriceAll();
+        if (result.success) {
+          return res.status(200).json({ data: result.data });
+        }else {
+            return res.status(500).json(ResponseDetail(500, { message: result.message }));
+        }
+    }
 }

@@ -12,6 +12,7 @@ router.get("/momo_return", OrderController.handlePaymentReturn); // Định ngh�
 router.get("/checkPaidBook/:bookID/:accountID", MiddlewareController.verifyToken, OrderController.checkPaidBook)
 router.patch("/updateOrder/:orderID", MiddlewareController.verifyAdmin, OrderController.updateOrder);
 router.delete('/deleteOrder/:orderID', MiddlewareController.verifyAdmin,OrderController.deleteOrder);
+router.get('/getPriceAll', OrderController.getPriceAll);
 
 
 export default router;
