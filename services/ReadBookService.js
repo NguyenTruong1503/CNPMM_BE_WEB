@@ -1,28 +1,38 @@
 import { ReadBook } from "../models/ReadBook.js";
 import { Book } from "../models/Book.js";
+import { Chapter } from "../models/Chapter.js";
+import { ChapterService } from "./ChapterService.js";
 
 export const ReadBookService = {
   addReadBook: async (readBookData) => {
     try {
-      const { accountId, bookId, readStatus, currentPage } = readBookData;
+      const { accountID, bookID, chapterID, chapter_number } = readBookData;
 
       // Check if a record with the same bookId and accountId already exists
-      const existingReadBook = await ReadBook.findOne({ accountId, bookId });
+      const existingReadBook = await ReadBook.findOne({ accountID: accountID, bookID: bookID });
 
       if (existingReadBook) {
-        return {
-          success: true,
-          message: "Sách này đã được thêm vào danh sách đọc của bạn.",
-          data: existingReadBook,
-        };
+         if (chapter_number>existingReadBook.chapter_number){
+           const response = await ReadBook.findOneAndUpdate(
+             { accountID: accountID, bookID: bookID },
+             { chapterID: chapterID, chapter_number: chapter_number },
+             { new: true });
+          if (response) return { success: true, data: response, message:"Cập nhật chap mới thành công" };
+        }
+        else
+          return {
+            success: true,
+            message: "Sách này đã được thêm vào danh sách đọc của bạn.",
+            data: existingReadBook,
+          }
       }
 
       // If no existing record, create a new one
       const readBook = new ReadBook({
-        accountId,
-        bookId,
-        readStatus,
-        currentPage,
+        accountID,
+        bookID,
+        chapterID,
+        chapter_number
       });
 
       let error = readBook.validateSync();
@@ -37,9 +47,8 @@ export const ReadBookService = {
       // Save the new readBook
       const response = await readBook.save();
       if (response) {
-        return { success: true, data: readBook };
+        return { success: true, data: readBook,message: "Thêm mới thành công" };
       }
-
       return { success: false, message: "Thêm sách đang đọc không thành công" };
     } catch (error) {
       console.log(error);
@@ -47,65 +56,50 @@ export const ReadBookService = {
     }
   },
 
-  getBooksByAccountId: async (accountId, page, limit) => {
+  getBooksByAccountId: async (accountId, skip, limit) => {
     try {
-      const skip = (page - 1) * limit;
 
       // Bước 1: Lấy tổng số bản ghi
-      const total = await ReadBook.countDocuments({
-        accountId: Number(accountId),
-        isDeleted: false,
-      });
+      const total = await ReadBook.countDocuments({accountID: accountId});
 
       // Bước 2: Lấy danh sách bookId từ ReadBook
-      const readBookList = await ReadBook.find({
-        accountId: Number(accountId),
-        isDeleted: false,
-      })
-        .sort({ createdAt: -1 })
+      const readBookList = await ReadBook.find({accountID: accountId})
+        .sort({ updatedAt: -1 })
         .skip(skip)
-        .limit(Number(limit))
-        .select("bookId readStatus currentPage startDate");
+        .limit(limit)
 
-      // Bước 3: Lấy danh sách bookId
-      const bookIds = readBookList.map((item) => item.bookId);
+      // Bước 3: Lấy danh sách bookId và chapterId
+      const bookIds = readBookList.map((item) => item.bookID);
+      const chapterIds = readBookList.map((item) => item.chapterID);
 
-      // Bước 4: Lấy thông tin chi tiết của các sách từ bảng Book
+      // Bước 4: Lấy thông tin chi tiết của các sách từ bảng Book và chapter từ bảng Chapter
       const booksInfo = await Book.find({
         bookId: { $in: bookIds },
         is_delete: false,
-      }).select("bookId name author description thumbnail price");
+      })
+      const chaptersInfo = await Chapter.find({ _id: { $in: chapterIds } });
 
-      // Bước 5: Kết hợp thông tin từ ReadBook và Book
+      // Bước 5: Kết hợp thông tin từ ReadBook và Book, Chapter
       const combinedBooks = readBookList
         .map((readBook) => {
           const bookInfo = booksInfo.find(
-            (book) => book.bookId === readBook.bookId
+            (book) => book.bookId === readBook.bookID
           );
+          const chapterInfo = chaptersInfo.find(
+            (chapter) => chapter._id.toString() === readBook.chapterID.toString()
+          );
+          
           if (!bookInfo) return null;
 
           return {
-            readId: readBook.readId,
-            readStatus: readBook.readStatus,
-            currentPage: readBook.currentPage,
+            chapter: chapterInfo,
             startDate: readBook.startDate,
             book: bookInfo,
           };
         })
-        .filter((book) => book !== null);
+        .filter((book,chapter) => (book !== null && chapter !==null));
 
-      return {
-        success: true,
-        data: {
-          books: combinedBooks,
-          pagination: {
-            currentPage: Number(page),
-            totalPages: Math.ceil(total / limit),
-            totalItems: total,
-            itemsPerPage: Number(limit),
-          },
-        },
-      };
+      return { success: true, books: combinedBooks, totalPages: Math.ceil(total / limit) }
     } catch (error) {
       console.log(error);
       return {

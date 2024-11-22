@@ -1,18 +1,19 @@
+import { Chapter } from "../models/Chapter.js";
 import { ReadBookService } from "../services/ReadBookService.js";
 import { ResponseData, ResponseDetail } from "../services/ResponseJSON.js";
 export const ReadBookController = {
   AddReadBook: async (req, res) => {
     const readBookData = {
-      accountId: req.body.accountId,
-      bookId: req.body.bookId,
-      readStatus: req.body.readStatus,
-      currentPage: req.body.currentPage,
+      accountID: req.body.accountID,
+      bookID: req.body.bookID,
+      chapterID: req.body.chapterID,
+      chapter_number: req.body.chapter_number, 
     };
 
     const result = await ReadBookService.addReadBook(readBookData);
 
     if (result.success) {
-      return res.status(200).json(ResponseData(200, result.data));
+      return res.status(200).json({ data: result.data, message: result.message });
     } else {
       const statusCode =
         result.message === "Lỗi thêm sách đang đọc" ? 500 : 400;
@@ -22,18 +23,15 @@ export const ReadBookController = {
     }
   },
   GetBooksByAccountId: async (req, res) => {
-    const accountId = parseInt(req.params.accountId);
+    const accountId = req.params.accountId;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-    const result = await ReadBookService.getBooksByAccountId(
-      accountId,
-      page,
-      limit
-    );
+    const result = await ReadBookService.getBooksByAccountId(accountId,skip,limit);
 
     if (result.success) {
-      return res.status(200).json(ResponseData(200, result.data));
+      return res.status(200).json({ data: result.books, totalPages: result.totalPages });
     } else {
       return res
         .status(400)

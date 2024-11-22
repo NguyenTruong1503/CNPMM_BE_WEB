@@ -30,4 +30,9 @@ router.get(
 
 router.get("/:bookID", ChapterController.getListChapterByBook);
 
+router.patch(
+  "/upView/:chapterID",
+  ChapterController.upView
+);
+
 export default router;

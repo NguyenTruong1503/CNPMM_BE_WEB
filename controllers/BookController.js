@@ -44,13 +44,16 @@ export const BookController = {
             .split(' ')
             .filter(i => i !== '')
             .join(' ');
+        const page = parseInt(req.query.page) || 1;
+        let limit = parseInt(req.query.limit)|| 10;
+        const skip = (page - 1) * limit;
 
-        const result = await BookService.search(keyword);
+        const result = await BookService.search(keyword,skip,limit);
         if (result.success) {
             if (result.data.length === 0) {
                 return res.status(404).json(ResponseDetail(400, { message: "Không tìm thấy sách nào" }));
             }
-            return res.status(200).json(ResponseData(200, result.data));
+            return res.status(200).json({ data: result.data, totalPages: result.totalPages });
         }else {
             return res.status(500).json(ResponseDetail(500, { message: result.message }));
         }
@@ -103,25 +106,37 @@ export const BookController = {
     },
     getBookByGenre: async (req, res) => {
         const genre = req.params.genreId;
-        const result = await BookService.getBookByGenre(genre);
+        const page = parseInt(req.query.page) || 1;
+        let limit = parseInt(req.query.limit)|| 10;
+        const skip = (page - 1) * limit;
+
+        const result = await BookService.getBookByGenre(genre, skip, limit);
         if (result.success) {
-            return res.status(200).json(ResponseData(200, result.data));
+            return res.status(200).json({ data: result.data, totalPages: result.totalPages });
         } else {
             return res.status(500).json(ResponseDetail(500, { message: result.message }));
         }
     },
     getFreeBook: async (req, res) => {
-        const result = await BookService.getFreeBook();
+        const page = parseInt(req.query.page) || 1;
+        let limit = parseInt(req.query.limit)|| 10;
+        const skip = (page - 1) * limit;
+
+        const result = await BookService.getFreeBook(skip,limit);
         if (result.success) {
-            return res.status(200).json(ResponseData(200, result.data));
+           return res.status(200).json({ data: result.data, totalPages: result.totalPages });
         } else {
             return res.status(500).json(ResponseDetail(500, { message: result.message }));
         }
     },
     getFeeBook: async (req, res) => {
-        const result = await BookService.getFeeBook();
+        const page = parseInt(req.query.page) || 1;
+        let limit = parseInt(req.query.limit)|| 10;
+        const skip = (page - 1) * limit;
+
+        const result = await BookService.getFeeBook(skip, limit);
         if (result.success) {
-            return res.status(200).json(ResponseData(200, result.data));
+            return res.status(200).json({ data: result.data, totalPages: result.totalPages });
         } else {
             return res.status(500).json(ResponseDetail(500, { message: result.message }));
         }

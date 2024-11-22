@@ -126,5 +126,17 @@ export const ChapterController = {
         console.log(error)
         return res.status(500).json(ResponseDetail(500, { message: "Lỗi tải chương truyện" }))
     }
-}
+  },
+  upView: async (req, res) => {
+    try {
+      const chapterID = req.params.chapterID
+      const response = await ChapterService.upView(chapterID)
+      if (response.success)
+        return res.status(200).json({data: response})
+      return res.status(400).json({ data: response })
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json(ResponseDetail(500, { message: "Lỗi tải chương truyện" }))
+    }
+  },
 };

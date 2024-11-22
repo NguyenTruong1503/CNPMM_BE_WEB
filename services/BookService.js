@@ -29,17 +29,18 @@ export const BookService = {
     getAllBooks: async (skip, limit) => {
         try {
             const books = await Book.find({ is_delete: 0 }).skip(skip).limit(limit);
-            const totalBooks = await Book.countDocuments();
+            const totalBooks = await Book.countDocuments({is_delete:0});
             return { success: true, data: books, totalPages: Math.ceil(totalBooks / limit)};
         }catch(error){
             console.log(error);
             return { success: false, message: "Lỗi lấy dữ liệu" };
         }
     },
-    search: async (keyword) => {
+    search: async (keyword,skip,limit) => {
         try {
-            const books = await Book.find({ $text: { $search: keyword }, is_delete: 0 });
-            return { success: true, data: books };
+            const books = await Book.find({ $text: { $search: keyword }, is_delete: 0 }).skip(skip).limit(limit);
+            const totalBooks = await Book.countDocuments({ $text: { $search: keyword }, is_delete:0 });
+            return { success: true, data: books, totalPages: Math.ceil(totalBooks / limit) };
         }catch(error){
             console.log(error);
             return { success: false, message: "Lỗi tìm kiếm" };
@@ -77,27 +78,30 @@ export const BookService = {
             return { success: false, message: "Lỗi lấy dữ liệu" };
         }
     },
-    getBookByGenre: async (genre) => {
+    getBookByGenre: async (genre,skip,limit) => {
         try {
-            const books = await Book.find({ genre: genre, is_delete: 0 })
-            .populate('genre');
-            return { success: true, data: books };
+            const books = await Book.find({ genre: genre, is_delete: 0 }).skip(skip).limit(limit)
+                .populate('genre');
+            const totalBooks = await Book.countDocuments({ genre: genre, is_delete:0})
+            return { success: true, data: books, totalPages: Math.ceil(totalBooks / limit) };
         } catch (error) {
             return { success: false, message: "Lỗi lấy dữ liệu" };
         }
     },
-    getFreeBook: async ()=> {
+    getFreeBook: async (skip,limit)=> {
         try {
-            const books = await Book.find({ price: 0, is_delete: 0 });
-            return { success: true, data: books };
+            const books = await Book.find({ price: 0, is_delete: 0 }).skip(skip).limit(limit);
+            const totalBooks = await Book.countDocuments({ price: 0, is_delete: 0 });
+            return { success: true, data: books, totalPages: Math.ceil(totalBooks / limit) };
         } catch (error) {
             return { success: false, message: "Lỗi lấy dữ liệu" };
         }
     },
-    getFeeBook : async ()=> {
+    getFeeBook : async (skip,limit)=> {
         try {
-            const books = await Book.find({ price: { $ne: 0 }, is_delete: 0 });
-            return { success: true, data: books };
+            const books = await Book.find({ price: { $ne: 0 }, is_delete: 0 }).skip(skip).limit(limit);
+            const totalBooks = await Book.countDocuments({ price: { $ne: 0 }, is_delete: 0 });
+            return { success: true, data: books, totalPages: Math.ceil(totalBooks / limit) };
         } catch (error) {
             return { success: false, message: "Lỗi lấy dữ liệu" };
         }

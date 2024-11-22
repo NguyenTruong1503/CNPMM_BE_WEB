@@ -68,6 +68,16 @@ export const ChapterService = {
     }
   },
 
+  getChapterByID: async (chapterID) => {
+    try {
+      return await Chapter.findOne({
+        _id: chapterID
+      });
+    } catch (error) {
+      throw error;
+    }
+  },
+
   getListChapterByBook: async (bookID) => {
     try {
       return await Chapter.find({ bookID: bookID }).sort({ chapter_number: 1 });
@@ -86,6 +96,17 @@ export const ChapterService = {
             }
         ])
         return await total[0].total
+    }catch(error){
+        console.log(error)
+        throw error
+    }
+  },
+  upView: async (chapterID) => {
+    try {
+      const result = await Chapter.findOneAndUpdate({ _id: chapterID },  { $inc: { chapter_view: 1 } }, { new: true })
+      if (result)
+        return { success: true, data: result }
+      return {success:false, message: result}
     }catch(error){
         console.log(error)
         throw error
